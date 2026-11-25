@@ -87,7 +87,7 @@ numerical smallness alone is insufficient for topological stability.
 
 ![Figure 2: Near-bifurcation reference and two-centroid potential](../docs/assets/figures/figure_01_bifurcation.png)
 
-*Figure 2. Near-bifurcation reference and two-centroid potential. Nearly overlapping curves can conceal different local critical-point structures. Original exploratory numerical plot; the counts were separately investigated through interval checks.*
+*Figure 2. Near-bifurcation reference and two-centroid potential. Nearly overlapping curves can conceal different local critical-point structures. Original numerical plot; the counts were separately investigated through interval checks.*
 
 ![Figure 3: Two-dimensional adversarial example: a single reference minimum becomes two minima separated by a saddle after centroid approximation](../docs/assets/figures/figure_09_two_dimensional_bifurcation.png)
 
@@ -186,7 +186,7 @@ procedure. The selected bandwidths were $0.90$ (QC) and $0.52$ (KDE).
 
 ![Figure 7: Held-out separation detection by condition](../docs/assets/figures/figure_08_heldout_detection.png)
 
-*Figure 7. Held-out separation detection by condition. The first four are two-component alternatives; the last four are unimodal controls. KDE's advantage is concentrated in the closest mixture. Raw seed-level outcomes are supplied in the reproducibility archive.*
+*Figure 7. Held-out separation detection by condition. The first four are two-component alternatives; the last four are unimodal controls. KDE's advantage is concentrated in the closest mixture. Raw seed-level outcomes are supplied in the repository data.*
 
 The result fails to support a distinctive statistical advantage for QC
 in this test. It does not establish an equivalence between the two
@@ -229,7 +229,7 @@ was small in the completed paired test; and QC offered no distinctive
 held-out resolution benefit over tuned KDE in the tested protocol.
 
 
-**Reproduction note.** The companion archive includes source code, CSV
+**Reproduction note.** The accompanying repository contains source code, CSV
 results, figure images, environment guidance and caveats. All plots
 denote sampled or numerical observations unless explicitly marked as
 interval-conditional.
@@ -238,7 +238,7 @@ interval-conditional.
 
 | Directory | Contents |
 |---|---|
-| `figures/` | Nine figure files, including the two-dimensional adversarial example |
+| `docs/assets/figures/` | Nine figure files, including the two-dimensional adversarial example |
 | `data/` | CSV tables for detection, compression cost, dispersion, and independent checks |
 | `code/` | Interval verifier, moment approximation, point audit, and held-out test code |
 

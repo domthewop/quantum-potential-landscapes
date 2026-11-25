@@ -107,7 +107,7 @@ numerical smallness alone is insufficient for topological stability.</p>
 <img alt="Figure 2: Near-bifurcation reference and two-centroid potential" src="assets/figures/figure_01_bifurcation.png"/>
 <figcaption>Figure 2. Near-bifurcation reference and two-centroid potential.
 Nearly overlapping curves can conceal different local critical-point
-structures. Original exploratory numerical plot; the counts were
+structures. Original numerical plot; the counts were
 separately investigated through interval checks.</figcaption>
 </figure>
 
@@ -140,6 +140,7 @@ s for <span class="math inline">\(N\in\{8,32,128,512,2048\}\)</span>.
 This does <em>not</em> establish constant-time complexity for arbitrary
 data: group spread and the number of resolved structures were held
 approximately fixed.</p>
+<div class="table-scroll" role="region" aria-label="Research data table 1" tabindex="0">
 <table>
 <thead>
 <tr class="header">
@@ -176,6 +177,7 @@ approximately fixed.</p>
 </tr>
 </tbody>
 </table>
+</div>
 <p><em>Table 1. Single-run controlled two-well verification, including
 summary construction. These timings are not statistically characterized
 wall-clock estimates.</em></p>
@@ -199,6 +201,7 @@ moment verifier returned inconclusive results or reached run limits even
 with more representatives. One direct near-bifurcation run certified a
 single minimum in 3.403 s while the moment verifier remained
 inconclusive.</p>
+<div class="table-scroll" role="region" aria-label="Research data table 2" tabindex="0">
 <table>
 <colgroup>
 <col style="width: 21%"/>
@@ -247,6 +250,7 @@ inconclusive.</p>
 </tr>
 </tbody>
 </table>
+</div>
 <p><em>Table 2. Adversarial whole-verifier tests. Inconclusive does not
 demonstrate a topology change; cases were selected to stress the
 method.</em></p>
@@ -279,6 +283,7 @@ chose its bandwidth to maximize validation detection subject to pooled
 validation false-split rate at most 5%. The final test evaluated 40
 independent seeds per condition; a split was registered by a numerical
 grid-mode procedure. The selected bandwidths were <span class="math inline">\(0.90\)</span> (QC) and <span class="math inline">\(0.52\)</span> (KDE).</p>
+<div class="table-scroll" role="region" aria-label="Research data table 3" tabindex="0">
 <table>
 <thead>
 <tr class="header">
@@ -310,6 +315,7 @@ grid-mode procedure. The selected bandwidths were <span class="math inline">\(0.
 </tr>
 </tbody>
 </table>
+</div>
 <p><em>Table 3. Bandwidths were selected on validation data and
 evaluated on disjoint test seeds. These synthetic results are not a
 universal method ranking.</em></p>
@@ -358,12 +364,13 @@ computational costs can improve substantially. But hard distributions
 frequently make certificates inconclusive; matched end-to-end speedup
 was small in the completed paired test; and QC offered no distinctive
 held-out resolution benefit over tuned KDE in the tested protocol.</p>
-<p><strong>Reproduction note.</strong> The companion archive includes
+<p><strong>Reproduction note.</strong> The accompanying repository contains
 source code, CSV results, figure images, environment guidance and
 caveats. All plots denote sampled or numerical observations unless
 explicitly marked as interval-conditional.</p>
 <h2 id="reproducibility-and-artifact-index">Reproducibility and artifact
 index</h2>
+<div class="table-scroll" role="region" aria-label="Research data table 4" tabindex="0">
 <table>
 <colgroup>
 <col style="width: 50%"/>
@@ -377,7 +384,7 @@ index</h2>
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>figures/</code></td>
+<td><code>docs/assets/figures/</code></td>
 <td>Nine figure files, including the two-dimensional adversarial
 example</td>
 </tr>
@@ -393,6 +400,7 @@ test code</td>
 </tr>
 </tbody>
 </table>
+</div>
 <p><strong>Minimal replay commands</strong> (run from the package root
 in a fresh Python environment):</p>
 <pre><code>python code/heldout_resolution.py

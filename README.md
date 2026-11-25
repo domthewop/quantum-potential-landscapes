@@ -54,7 +54,7 @@ This repository examines whether weighted landmark and moment-based approximatio
 
 The [complete report](report/Quantum_Potential_Landscape_Study.md) includes the model, derivative-error bound, counterexamples, [interval-arithmetic](https://en.wikipedia.org/wiki/Interval_arithmetic) verification, computational benchmarks, limitations, primary references, and additional images.
 
-The [PDF](docs/assets/Quantum_Potential_Landscape_Study.pdf) preserves the publication-style layout. Scripts are in [`code/`](code/), original experimental tables in [`data/`](data/), and instructions in [REPRODUCE.md](REPRODUCE.md).
+The [PDF](docs/assets/Quantum_Potential_Landscape_Study.pdf) contains the typeset report. Scripts are in [`code/`](code/), original experimental tables in [`data/`](data/), and instructions in [REPRODUCE.md](REPRODUCE.md).
 
 ## tl;dr
 

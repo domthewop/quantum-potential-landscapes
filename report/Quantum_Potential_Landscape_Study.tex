@@ -21,7 +21,7 @@
 \emergencystretch=1.5em
 \setlist[itemize]{itemsep=2pt,topsep=3pt,leftmargin=16pt}
 \captionsetup{font=small,labelfont={bf,color=accent},textfont={color=ink},skip=5pt}
-\graphicspath{{figures/}}
+\graphicspath{{../docs/assets/figures/}{docs/assets/figures/}}
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[L]{\small\sffamily\color{muted}GAUSSIAN QUANTUM-POTENTIAL LANDSCAPES}
@@ -31,7 +31,7 @@
 \setlength{\headheight}{14pt}
 \begin{document}
 \vspace*{5mm}
-{\sffamily\footnotesize\bfseries\color{accent} EXPLORATORY TECHNICAL REPORT \quad / \quad 22 NOVEMBER 2026}\par
+{\sffamily\footnotesize\bfseries\color{accent} 22 NOVEMBER 2026}\par
 \vspace{7mm}
 {\sffamily\fontsize{23}{28}\selectfont\bfseries\color{ink} Certified Compression of\\ Gaussian Quantum-Potential\\ Landscapes}\par
 \vspace{3mm}
@@ -49,7 +49,7 @@
 \textbf{Conclusion.} The results support an instructive numerical technique and useful counterexamples; they do \emph{not} establish a general new topology-preserving coreset theorem, consistent computational superiority, or a unique machine-learning advantage.
 \end{abstract}
 \vspace{2mm}
-{\footnotesize\sffamily\color{muted}\textbf{Status:} exploratory; not peer reviewed. Critical-point certificates are conditional on the interval implementation and bounded domain. No claim of full basin, Morse--Smale, or dynamic quantum clustering equivalence.}\par
+
 
 \section{Research question and scope}
 Quantum Clustering (QC) constructs a scalar potential from a Gaussian kernel field. Critical points of this potential can reveal structure not shared by the modes of the original Gaussian density estimator. The research considered whether compressing the Gaussian sources into weighted groups---and retaining enough moment or support information---could preserve this structure with certifiable error and worthwhile computation savings.
@@ -87,7 +87,7 @@ Near a bifurcation, two pointwise-close potentials need not have the same number
 
 \begin{figure}[H]\centering
 \includegraphics[width=.95\linewidth]{figure_01_bifurcation.png}
-\caption{Near-bifurcation reference and two-centroid potential. Nearly overlapping curves can conceal different local critical-point structures. Original exploratory numerical plot; the counts were separately investigated through interval checks.}\label{fig:bif}
+\caption{Near-bifurcation reference and two-centroid potential. Nearly overlapping curves can conceal different local critical-point structures. Original numerical plot; the counts were separately investigated through interval checks.}\label{fig:bif}
 \end{figure}
 
 \begin{figure}[H]\centering
@@ -159,7 +159,7 @@ Remaining three mixtures (120 trials)&120/120&120/120\\\bottomrule
 
 \begin{figure}[H]\centering
 \includegraphics[width=.78\linewidth]{figure_08_heldout_detection.png}
-\caption{Held-out separation detection by condition. The first four are two-component alternatives; the last four are unimodal controls. KDE's advantage is concentrated in the closest mixture. Raw seed-level outcomes are supplied in the reproducibility archive.}\label{fig:heldout}
+\caption{Held-out separation detection by condition. The first four are two-component alternatives; the last four are unimodal controls. KDE's advantage is concentrated in the closest mixture. Raw seed-level outcomes are supplied in the repository data.}\label{fig:heldout}
 \end{figure}
 
 The result fails to support a distinctive statistical advantage for QC in this test. It does not establish an equivalence between the two operators or rule out favorable problems elsewhere. Earlier nonconvex clustering experiments also showed that strong spectral/density baselines often matched QC's downstream bandit benefit, limiting the significance of comparisons against K-means alone.
@@ -169,12 +169,12 @@ An independent high-precision implementation, using system MPFR at 256-bit preci
 
 The approach overlaps heavily with established Gaussian kernel approximation, Taylor moment methods, Krawczyk verification, Morse-theoretic stability and topology-preserving KDE coresets. Related prior art includes original Quantum Clustering by Horn and Gottlieb, weighted-particle QC analyses, and recent uncertainty-aware KDE Morse-core-set work. We did not implement the complete recent competing topological coreset algorithm, so a claim of superiority to it would be unsupported.
 
-\section{Conclusion and publication disposition}
+\section{Conclusion}
 The investigation produced a reproducible technique for conditional two-dimensional critical-point verification from compressed Gaussian summaries, together with exact and numerical counterexamples clarifying its limits. On compact structured mixtures, verification queries can avoid revisiting all source observations, and primitive-level computational costs can improve substantially. But hard distributions frequently make certificates inconclusive; matched end-to-end speedup was small in the completed paired test; and QC offered no distinctive held-out resolution benefit over tuned KDE in the tested protocol.
 
-\textbf{Disposition.} Archive as an exploratory technical report and reproducibility package, without a claim of a novel general-purpose clustering algorithm or full topology preservation. Reopen the research only if a new theoretical result or concrete downstream application establishes a separation from known kernel geometry methods.\par
+
 \vspace{2mm}
-{\small\sffamily\color{muted}\textbf{Reproduction note.} The companion archive includes source code, CSV results, figure images, environment guidance and caveats. All plots denote sampled or numerical observations unless explicitly marked as interval-conditional.}
+{\small\sffamily\color{muted}\textbf{Reproduction note.} The accompanying repository contains source code, CSV results, figure images, environment guidance and caveats. All plots denote sampled or numerical observations unless explicitly marked as interval-conditional.}
 
 
 \newpage
@@ -182,8 +182,8 @@ The investigation produced a reproducible technique for conditional two-dimensio
 \begin{tabularx}{\linewidth}{@{}lX@{}}
 \toprule
 \textbf{Directory} & \textbf{Contents}\\\midrule
-\texttt{figures/} & Eight experiment panels and the two-dimensional adversarial example, referenced by the Markdown report.\\
-\texttt{data/} & Raw and aggregated CSVs for held-out detections, compression costs, dispersion tests, interval audits and other exploratory runs.\\
+\texttt{docs/assets/figures/} & Nine figure files, including the two-dimensional adversarial example.\\
+\texttt{data/} & Raw and aggregated CSVs for held-out detections, compression costs, dispersion tests, interval audits and other experiments.\\
 \texttt{code/} & Critical-point interval checker, moment enclosures, paired verifier, high-precision point auditor, and held-out split-detection reproducer.\\\bottomrule
 \end{tabularx}
 

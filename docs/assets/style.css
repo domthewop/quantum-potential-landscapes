@@ -41,3 +41,22 @@ main{padding-bottom:80px} section{padding:49px 0;border-bottom:1px solid var(--l
  .single-report-page .report-body { padding:0; max-width:none; }
  .report-body img, .report-body table { break-inside:avoid; }
 }
+
+/* Tables scroll within the article on narrow viewports instead of widening the page. */
+.single-report-page .report-body { min-width: 0; max-width: 100%; }
+.single-report-page .report-body .table-scroll {
+  width: 100%; max-width: 100%; overflow-x: auto; overflow-y: hidden;
+  -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain;
+  margin: 18px 0 24px;
+}
+.single-report-page .report-body .table-scroll table {
+  display: table; min-width: 550px; width: 100%; overflow: visible; margin: 0;
+}
+.single-report-page .report-body .math.display {
+  display: block; width: 100%; max-width: 100%; overflow-x: auto; overflow-y: hidden;
+}
+@media (max-width: 760px) {
+  .single-report-page .report-body .table-scroll { border: 1px solid var(--line); border-radius: 4px; }
+  .single-report-page .report-body .table-scroll table th,
+  .single-report-page .report-body .table-scroll table td { padding: 8px 10px; }
+}

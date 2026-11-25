@@ -24,3 +24,21 @@ The held-out script writes generated CSVs under `code/`. Do not overwrite the ar
 - The primitive interval-evaluation speedup should not be interpreted as the total certification speedup.
 
 See [the report](report/Quantum_Potential_Landscape_Study.md) for all methodological details.
+
+## Build the typeset PDF
+
+The LaTeX source is in `report/` and figures are stored in `docs/assets/figures/`.
+With XeLaTeX, the `fontspec`, `booktabs`, `caption`, `multirow`,
+`multicol`, `hyperref`, `fancyhdr`, and other packages referenced by the
+source installed, run:
+
+```bash
+cd report
+xelatex -interaction=nonstopmode -halt-on-error Quantum_Potential_Landscape_Study.tex
+xelatex -interaction=nonstopmode -halt-on-error Quantum_Potential_Landscape_Study.tex
+cd ..
+```
+
+The generated PDF will be in `report/`. The published copy served by
+GitHub Pages is `docs/assets/Quantum_Potential_Landscape_Study.pdf`;
+copy the new build there when updating the published report.
