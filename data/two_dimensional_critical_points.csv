@@ -1,0 +1,7 @@
+case,model,components,critical_count,minima,saddles,maxima,certified,subdivisions,unresolved,walltime_s
+two_wells,reference,8,3,2,1,0,True,364,0,4.596
+two_wells,compressed,2,3,2,1,0,True,346,0,1.6
+three_wells,reference,12,7,3,3,1,True,1773,0,32.686
+three_wells,compressed,3,7,3,3,1,True,1774,0,11.532
+bifurcation_flip,reference,8,1,1,0,0,True,194,0,2.333
+bifurcation_flip,compressed,2,3,2,1,0,True,328,0,1.496

@@ -1,0 +1,214 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[margin=21mm,top=22mm,bottom=23mm]{geometry}
+\usepackage{fontspec}
+\setmainfont{Liberation Serif}
+\setsansfont{Lato}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{booktabs,tabularx,array,multirow,multicol}
+\usepackage{graphicx,caption,subcaption}
+\usepackage{hyperref,xcolor,microtype,fancyhdr,titlesec,enumitem,float}
+\definecolor{ink}{HTML}{182C3C}
+\definecolor{accent}{HTML}{176782}
+\definecolor{muted}{HTML}{607080}
+\definecolor{line}{HTML}{C8D5DA}
+\hypersetup{colorlinks=true,linkcolor=accent,urlcolor=accent,citecolor=accent,pdftitle={Certified Compression of Gaussian Quantum-Potential Landscapes},pdfsubject={Numerical stability and limits of approximate quantum clustering},pdfauthor={Domenic Merenda}}
+\titleformat{\section}{\Large\sffamily\bfseries\color{ink}}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\large\sffamily\bfseries\color{accent}}{\thesubsection}{0.5em}{}
+\titlespacing*{\section}{0pt}{15pt}{6pt}
+\titlespacing*{\subsection}{0pt}{10pt}{4pt}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\emergencystretch=1.5em
+\setlist[itemize]{itemsep=2pt,topsep=3pt,leftmargin=16pt}
+\captionsetup{font=small,labelfont={bf,color=accent},textfont={color=ink},skip=5pt}
+\graphicspath{{figures/}}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\sffamily\color{muted}GAUSSIAN QUANTUM-POTENTIAL LANDSCAPES}
+\fancyhead[R]{\small\sffamily\color{muted}RESEARCH NOTE  |  NOV 2026}
+\fancyfoot[R]{\sffamily\small\color{muted}\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\setlength{\headheight}{14pt}
+\begin{document}
+\vspace*{5mm}
+{\sffamily\footnotesize\bfseries\color{accent} EXPLORATORY TECHNICAL REPORT \quad / \quad 22 NOVEMBER 2026}\par
+\vspace{7mm}
+{\sffamily\fontsize{23}{28}\selectfont\bfseries\color{ink} Certified Compression of\\ Gaussian Quantum-Potential\\ Landscapes}\par
+\vspace{3mm}
+{\sffamily\large\color{muted} Stability bounds, critical-point counterexamples, computational tradeoffs, and matched KDE comparisons}\par
+\vspace{3mm}
+{\sffamily\normalsize\bfseries\color{ink} Domenic Merenda}\par
+{\sffamily\normalsize\color{accent}\href{mailto:dmerenda@gmail.com}{dmerenda@gmail.com}}\par
+\vspace{4mm}
+\noindent\color{accent}\rule{\linewidth}{1.1pt}\color{ink}
+\vspace{4mm}
+\begin{abstract}
+\noindent\textbf{Question.} Can low-cardinality summaries of Gaussian quantum-clustering potentials preserve and certify critical-point structure at lower computational cost, and does the extra potential topology provide downstream statistical value?\\
+\textbf{Approach.} We derive group-moment Taylor enclosures, couple them to interval/Krawczyk critical-point tests, examine near-bifurcation failures, benchmark full and compressed verification, and compare quantum-potential separation detection with bandwidth-tuned kernel density estimation (KDE).\\
+\textbf{Results.} Small two-dimensional reference potentials can be verified from compressed summaries. On a favorable fixed two-well family, two summaries supported verification through 2,048 original anchors with approximately constant observed verification time. But certification was inconclusive on overlapping, anisotropic and near-degenerate inputs, and paired 32-anchor end-to-end time improved only modestly (17.945 s direct; 16.238 s compressed). In a held-out synthetic split-detection study, tuned KDE detected 98.75\% of alternatives versus 75.0\% for QC at a shared 1.875\% false-split rate.\\
+\textbf{Conclusion.} The results support an instructive numerical technique and useful counterexamples; they do \emph{not} establish a general new topology-preserving coreset theorem, consistent computational superiority, or a unique machine-learning advantage.
+\end{abstract}
+\vspace{2mm}
+{\footnotesize\sffamily\color{muted}\textbf{Status:} exploratory; not peer reviewed. Critical-point certificates are conditional on the interval implementation and bounded domain. No claim of full basin, Morse--Smale, or dynamic quantum clustering equivalence.}\par
+
+\section{Research question and scope}
+Quantum Clustering (QC) constructs a scalar potential from a Gaussian kernel field. Critical points of this potential can reveal structure not shared by the modes of the original Gaussian density estimator. The research considered whether compressing the Gaussian sources into weighted groups---and retaining enough moment or support information---could preserve this structure with certifiable error and worthwhile computation savings.
+
+This work concerns \emph{static Gaussian QC}, not time-dependent unitary Dynamic Quantum Clustering, quantum computing, or a general-purpose classifier. We distinguish: (a) a numerical root match, (b) a conditional interval certificate of the count and types of critical points on a domain, and (c) full basin topology, which the current method does not certify.
+
+For locations $x_i\in\mathbb R^d$, positive weights $w_i$ and bandwidth $\sigma>0$, define
+\begin{align}
+\psi(x)&=\sum_iw_i\exp\!\left(-\frac{\|x-x_i\|^2}{2\sigma^2}\right),\\
+V(x)&=\frac{\sigma^2}{2}\frac{\Delta\psi(x)}{\psi(x)}+\frac d2
+=\frac{\sum_iw_i\exp(-\|x-x_i\|^2/(2\sigma^2))\|x-x_i\|^2}{2\sigma^2\sum_iw_i\exp(-\|x-x_i\|^2/(2\sigma^2))}.\label{eq:potential}
+\end{align}
+The second equality holds exactly for isotropic Gaussian kernels. The potential is a location-dependent, kernel-weighted mean squared distance, not a simulated quantum trajectory. All topological assertions are restricted to explicit compact analysis domains.
+
+\section{Compression and verification method}
+\subsection{Why group moments improve an approximation}
+Group the sources into sets $G_j$ with centers $c_j$, residuals $r_i=x_i-c_j$, and moment sums $S_j=\sum_{i\in G_j}r_i$ and $M_j=\sum_{i\in G_j}r_ir_i^\top$. For a Gaussian kernel $K$, a multivariate Taylor expansion gives
+\begin{equation}
+\sum_{i\in G_j} D^\alpha K(x-x_i)
+=n_jD^\alpha K(x-c_j)-S_j\!\cdot\!\nabla D^\alpha K(x-c_j)
++\tfrac12M_j\!:\!\nabla^2D^\alpha K(x-c_j)+R_{j,\alpha}(x).\label{eq:taylor}
+\end{equation}
+Exact centroid choice cancels $S_j$. Storing the second moment corrects the next term; support-based third-order remainders bound the residual. Derivatives of $V$ through its Hessian require Gaussian-field derivatives through fourth order; the remainder enclosures therefore evaluate Gaussian derivatives through seventh order. Bounds must also establish $\psi>0$ over every queried spatial box before dividing.
+
+\subsection{Conditional critical-point certification}
+The verifier proposes roots of $\nabla V=0$, then uses interval gradient/Hessian enclosures and Krawczyk tests to establish existence and uniqueness within candidate boxes. Interval subdivision excludes additional roots from the remaining rectangular domain. The Hessian's inertia distinguishes minima, saddles and maxima. When subdivision cannot settle all regions, the result is \textbf{inconclusive}, not a proof of a topological mismatch.
+
+\begin{figure}[H]\centering
+\includegraphics[width=.91\linewidth]{figure_02_two_dimensional_landscapes.png}
+\caption{Two-dimensional reference and compressed potentials: two-well and three-well cases with matched critical-point counts. Markers indicate critical-point types. These are critical-point certificates, not full basin-connectivity certificates.}\label{fig:landscapes}
+\end{figure}
+
+\section{A counterexample and the role of degeneracy}
+Near a bifurcation, two pointwise-close potentials need not have the same number of wells. A controlled one-dimensional four-anchor reference had a single minimum while its two-centroid representation had two minima and one maximum. The quantization error was $Q=0.0144$ and sampled maximum potential difference $0.01176$, yet the central curvature changed sign ($+0.00638$ versus $-0.00820$). The qualitative change is explained by proximity to a degenerate critical point; numerical smallness alone is insufficient for topological stability.
+
+\begin{figure}[H]\centering
+\includegraphics[width=.95\linewidth]{figure_01_bifurcation.png}
+\caption{Near-bifurcation reference and two-centroid potential. Nearly overlapping curves can conceal different local critical-point structures. Original exploratory numerical plot; the counts were separately investigated through interval checks.}\label{fig:bif}
+\end{figure}
+
+\begin{figure}[H]\centering
+\includegraphics[width=.86\linewidth]{figure_09_two_dimensional_bifurcation.png}
+\caption{Two-dimensional adversarial example: a single reference minimum becomes two minima separated by a saddle after centroid approximation. Critical-point counts were checked on the specified bounded domain; global basin topology was not certified.}
+\label{fig:adversarial2d}
+\end{figure}
+
+
+A second exact construction illustrates why a centroid and covariance cannot identify the QC topology. With $\sigma=1$, the symmetric weighted samples $\{-0.8,+0.8\}$ with weights $(.5,.5)$ and $\{-1.6,0,+1.6\}$ with weights $(.125,.75,.125)$ both have mass one, mean zero and variance $0.64$. Yet $V''(0)=-0.28$ for the first and approximately $+0.8201$ for the second. Their central stationary points have opposite local type. A certification scheme relying only on raw moments without support/remainder information cannot resolve this distinction in general.
+
+\section{Certification results and computational costs}
+\subsection{Favorable compact two-well distributions}
+For a compact two-well family with fixed group complexity, two moment summaries supported successful conditional verification of two minima and one saddle as the number of original anchors grew. Observed verification time including summary construction was approximately 13--14 s for $N\in\{8,32,128,512,2048\}$. This does \emph{not} establish constant-time complexity for arbitrary data: group spread and the number of resolved structures were held approximately fixed.
+
+\begin{table}[htbp]\centering\small
+\begin{tabular}{rrr}\toprule
+Original sources $N$ & Moment summaries $m$ & Verification time (s)\\\midrule
+8&2&13.5\\32&2&13.7\\128&2&13.1\\512&2&13.5\\2048&2&13.1\\\bottomrule
+\end{tabular}
+\caption{Single-run controlled two-well verification from an earlier benchmark. Includes summary construction; these are not statistically characterized wall-clock estimates.}\label{tab:scaling}
+\end{table}
+
+\begin{figure}[H]\centering
+\includegraphics[width=.87\linewidth]{figure_04_interval_evaluation_scaling.png}
+\caption{Direct versus moment-summary \emph{interval-box evaluation}, including summary construction. This timing test measured four evaluation boxes, not complete root certification. It shows a strong primitive-level computational crossover, which must not be reported as an equivalent whole-verifier speedup.}\label{fig:evalcost}
+\end{figure}
+
+\subsection{Matched whole-verifier comparisons and failure cases}
+A fresh paired 32-anchor test certified the same three critical points: 17.945 s direct versus 16.238 s with moments, an approximately 1.11$\times$ speedup. A larger direct test was censored by a run limit and is not a measured speedup. On deliberately overlapping, anisotropic and near-degenerate mixtures, the moment verifier returned inconclusive results or reached run limits even with more representatives. One direct near-bifurcation run certified a single minimum in 3.403 s while the moment verifier remained inconclusive.
+
+\begin{table}[htbp]\centering\small
+\begin{tabularx}{\linewidth}{@{}lrrX@{}}\toprule
+Stress case & $N$ & $m$ & Moment certificate outcome \\\midrule
+Compact stochastic two-well &32&2&Three critical points certified\\
+Overlapping two-well &24&2,4,8&Inconclusive for all three settings\\
+Near-bifurcation &24&2&Inconclusive; one candidate region\\
+Anisotropic three-group &24&4&Inconclusive; multiple candidates\\
+Canonical three-well &12&3&Unfinished within the imposed run limit\\\bottomrule
+\end{tabularx}
+\caption{Adversarial whole-verifier tests. Inconclusive is not a demonstrated topology change. Tests were chosen to stress the method, not drawn as a representative benchmark sample.}\label{tab:failure}
+\end{table}
+
+\begin{figure}[H]\centering
+\includegraphics[width=.80\linewidth]{figure_05_dispersion_sensitivity.png}
+\caption{Local saddle-curvature sign checks over group spread and landmark count. Dark cells indicate two seeds certified; light cells indicate inconclusive tests. These are local curvature checks, \emph{not} global critical-point certificates.}\label{fig:dispersion}
+\end{figure}
+
+\section{Does quantum-potential topology add statistical value?}
+For two equally weighted Gaussian sources at $\pm a$, the central KDE density bifurcation occurs at $a=\sigma$, while the corresponding QC potential changes central curvature at $a=\sigma/\sqrt2$. Thus QC can yield two wells while same-bandwidth KDE remains unimodal. This is a real analytic distinction, but a smaller KDE bandwidth can also produce a split.
+
+\begin{figure}[H]\centering
+\includegraphics[width=.76\linewidth]{figure_03_qc_kde_geometry.png}
+\caption{The same Gaussian field can yield two QC potential wells while the density remains unimodal. The example illustrates sensitivity, not evidence of superior detection accuracy.}\label{fig:qckde}
+\end{figure}
+
+We conducted a held-out test with 160 samples per dataset, four mixture alternatives, four unimodal controls, a common nine-value bandwidth candidate set and disjoint validation/test seeds. Each method chose its bandwidth to maximize validation detection subject to pooled validation false-split rate at most 5\%. The final test evaluated 40 independent seeds per condition; a split was registered by a numerical grid-mode procedure. The selected bandwidths were $0.90$ (QC) and $0.52$ (KDE).
+
+\begin{table}[htbp]\centering\small
+\begin{tabular}{lrr}\toprule
+Held-out metric & QC & KDE\\\midrule
+Alternative detection (160 trials)&75.0\%&98.75\%\\
+Control false-split rate (160 trials)&1.875\%&1.875\%\\
+Closest mixture, $a=0.65$ (40 trials)&0/40&38/40\\
+Remaining three mixtures (120 trials)&120/120&120/120\\\bottomrule
+\end{tabular}
+\caption{Matched bandwidth selection on validation data, evaluated on disjoint test seeds. These are narrow synthetic detection results, not a universal method ranking.}\label{tab:heldout}
+\end{table}
+
+\begin{figure}[H]\centering
+\includegraphics[width=.78\linewidth]{figure_08_heldout_detection.png}
+\caption{Held-out separation detection by condition. The first four are two-component alternatives; the last four are unimodal controls. KDE's advantage is concentrated in the closest mixture. Raw seed-level outcomes are supplied in the reproducibility archive.}\label{fig:heldout}
+\end{figure}
+
+The result fails to support a distinctive statistical advantage for QC in this test. It does not establish an equivalence between the two operators or rule out favorable problems elsewhere. Earlier nonconvex clustering experiments also showed that strong spectral/density baselines often matched QC's downstream bandit benefit, limiting the significance of comparisons against K-means alone.
+
+\section{Independent audit, prior work, and what remains unproved}
+An independent high-precision implementation, using system MPFR at 256-bit precision and a different weighted-distance derivative formula, checked sampled values of $V$, its gradient and its Hessian against interval enclosures. All \textbf{72 of 72 sampled spatial boxes} passed, with two sample points checked per box. These tests increase confidence in the code, but do \emph{not} independently validate every outward-rounded interval operation or prove exhaustive root enumeration. No independent formal proof assistant or separately audited interval arithmetic package was used.
+
+The approach overlaps heavily with established Gaussian kernel approximation, Taylor moment methods, Krawczyk verification, Morse-theoretic stability and topology-preserving KDE coresets. Related prior art includes original Quantum Clustering by Horn and Gottlieb, weighted-particle QC analyses, and recent uncertainty-aware KDE Morse-core-set work. We did not implement the complete recent competing topological coreset algorithm, so a claim of superiority to it would be unsupported.
+
+\section{Conclusion and publication disposition}
+The investigation produced a reproducible technique for conditional two-dimensional critical-point verification from compressed Gaussian summaries, together with exact and numerical counterexamples clarifying its limits. On compact structured mixtures, verification queries can avoid revisiting all source observations, and primitive-level computational costs can improve substantially. But hard distributions frequently make certificates inconclusive; matched end-to-end speedup was small in the completed paired test; and QC offered no distinctive held-out resolution benefit over tuned KDE in the tested protocol.
+
+\textbf{Disposition.} Archive as an exploratory technical report and reproducibility package, without a claim of a novel general-purpose clustering algorithm or full topology preservation. Reopen the research only if a new theoretical result or concrete downstream application establishes a separation from known kernel geometry methods.\par
+\vspace{2mm}
+{\small\sffamily\color{muted}\textbf{Reproduction note.} The companion archive includes source code, CSV results, figure images, environment guidance and caveats. All plots denote sampled or numerical observations unless explicitly marked as interval-conditional.}
+
+
+\newpage
+\section*{Reproducibility and artifact index}
+\begin{tabularx}{\linewidth}{@{}lX@{}}
+\toprule
+\textbf{Directory} & \textbf{Contents}\\\midrule
+\texttt{figures/} & Eight experiment panels and the two-dimensional adversarial example, referenced by the Markdown report.\\
+\texttt{data/} & Raw and aggregated CSVs for held-out detections, compression costs, dispersion tests, interval audits and other exploratory runs.\\
+\texttt{code/} & Critical-point interval checker, moment enclosures, paired verifier, high-precision point auditor, and held-out split-detection reproducer.\\\bottomrule
+\end{tabularx}
+
+\vspace{3mm}
+\textbf{Minimal replay commands} (run from the package root in a fresh Python environment):
+\begin{verbatim}
+python code/heldout_resolution.py
+python code/mpfr_point_audit.py
+python code/paired_certification.py \
+  --case compact_big --n 32 --m 2 \
+  --method moment --out compact_moment.json
+\end{verbatim}
+The same verifier supports \texttt{--method direct} for comparison. Results depend on runtime, dependencies and numerical precision. A failed or timed-out certificate should be recorded as inconclusive; neither constitutes a proof of differing topology.
+
+\section*{Selected references}
+\begin{multicols}{2}\footnotesize
+\begin{enumerate}[leftmargin=16pt,itemsep=3pt,topsep=2pt]
+\item Horn, D. and Gottlieb, A. (2001). \emph{The Method of Quantum Clustering}. Advances in Neural Information Processing Systems.
+\item Maignan, A. and Scott, A. (2021). \emph{A Comprehensive Analysis of Quantum Clustering: Finding All the Potential Minima}.
+\item Cohen-Steiner, D., Edelsbrunner, H. and Harer, J. (2007). Stability of persistence diagrams. \emph{Discrete \& Computational Geometry}.
+\item Chen, Y.-C., Genovese, C. and Wasserman, L. Statistical work on Morse--Smale complex estimation and stability.
+\item Lyu, G., Gorski, K., Phillips, J. and Wang, B. (2026). \emph{A Topology-Preserving Coreset for Kernel Regression in Scientific Visualization}. IEEE TVCG.
+\item Lyu, G., Phillips, J. and Wang, B. (2026). \emph{Topological Analysis of Kernel Density Estimates via Uncertainty-Aware Morse Complexes and Coresets}. IEEE VIS.
+\end{enumerate}
+\end{multicols}
+\vspace{1mm}
+
+\end{document}

@@ -1,0 +1,3 @@
+method,selected_bandwidth,validation_fpr,validation_tpr,test_fpr,test_tpr,per_case_test_rates
+QC,0.9,0.0125,0.7625,0.01875,0.75,"{'gauss_small': np.float64(0.0), 'gauss_wide': np.float64(0.0), 'student_t3': np.float64(0.025), 'skew': np.float64(0.05), 'mix_065': np.float64(0.0), 'mix_080': np.float64(1.0), 'mix_095': np.float64(1.0), 'mix_120': np.float64(1.0)}"
+KDE,0.52,0.0,1.0,0.01875,0.9875,"{'gauss_small': np.float64(0.0), 'gauss_wide': np.float64(0.0), 'student_t3': np.float64(0.0), 'skew': np.float64(0.075), 'mix_065': np.float64(0.95), 'mix_080': np.float64(1.0), 'mix_095': np.float64(1.0), 'mix_120': np.float64(1.0)}"
